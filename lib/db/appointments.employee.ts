@@ -47,7 +47,7 @@ export async function getEmployeeAppointments(
 }
 
 /** Todas las reservas (para admin) en un rango */
-export async function getAllAppointments(from: string, to: string): Promise<(AppointmentEmployee & { employee_nombre: string; employee_apellido: string })[]> {
+export async function getAllAppointments(from: string, to: string): Promise<(AppointmentEmployee & { employee_id: number; employee_nombre: string; employee_apellido: string })[]> {
   return query(
     `SELECT
        a.id, a.vehicle_id, a.client_id, a.employee_id, a.estado, a.notas,
