@@ -16,7 +16,21 @@
       "Bash(mv \"\\(admin\\)/page.tsx\"             \"\\(admin\\)/admin/page.tsx\")",
       "Bash(mv \"\\(admin\\)/usuarios/page.tsx\"    \"\\(admin\\)/admin/usuarios/page.tsx\")",
       "Bash(mv \"\\(admin\\)/reservas/page.tsx\"    \"\\(admin\\)/admin/reservas/page.tsx\")",
-      "Bash(mv \"\\(admin\\)/metricas/page.tsx\"    \"\\(admin\\)/admin/metricas/page.tsx\")"
+      "Bash(mv \"\\(admin\\)/metricas/page.tsx\"    \"\\(admin\\)/admin/metricas/page.tsx\")",
+      "mcp__claude_ai_Vercel__deploy_to_vercel",
+      "Bash(vercel --version)",
+      "mcp__claude_ai_Supabase__list_organizations",
+      "mcp__claude_ai_Supabase__get_cost",
+      "mcp__claude_ai_Supabase__confirm_cost",
+      "mcp__claude_ai_Supabase__create_project",
+      "Bash(node:*)",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "mcp__claude_ai_Supabase__get_project_url",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "Bash(cmd.exe /c \"cd C:\\\\Users\\\\Martin\\\\Desktop\\\\paginaAutos && npm run build 2>&1\")",
+      "Bash(cmd.exe:*)",
+      "Bash(xargs grep:*)",
+      "mcp__claude_ai_Supabase__list_projects"
     ]
   }
 }

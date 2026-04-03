@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth/session'
 import { updateVehicle, deleteVehicle, addVehicleImage, deleteVehicleImage, setPortada, updateImageOrder } from '@/lib/db/vehicles.admin'
+import { logAudit, getIp } from '@/lib/db/audit'
 
 function requireEmployee(session: Awaited<ReturnType<typeof getSession>>) {
   if (!session || !['empleado', 'admin'].includes(session.role)) return false
@@ -42,6 +43,7 @@ export async function PATCH(
     if (key in body) data[key] = body[key]
   }
   await updateVehicle(Number(id), data)
+  await logAudit({ action: 'UPDATE', entityType: 'vehicles', entityId: Number(id), userId: session!.id, newData: data, ip: getIp(req) })
   return NextResponse.json({ ok: true })
 }
 
@@ -55,5 +57,6 @@ export async function DELETE(
   const { id } = await params
   const result = await deleteVehicle(Number(id))
   if (result.error) return NextResponse.json({ error: result.error }, { status: 409 })
+  await logAudit({ action: 'DELETE', entityType: 'vehicles', entityId: Number(id), userId: session!.id, ip: getIp(_req) })
   return NextResponse.json({ ok: true })
 }

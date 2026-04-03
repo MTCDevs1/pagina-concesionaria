@@ -4,6 +4,7 @@ import { createAppointment } from '@/lib/db/appointments'
 import { getAvailableSlotsForEmployee, getBookedSlotsForVehicle } from '@/lib/scheduling/availability'
 import { isBookingAllowed, TZ } from '@/lib/scheduling/slots'
 import { queryOne } from '@/lib/db/client'
+import { logAudit, getIp } from '@/lib/db/audit'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
@@ -55,6 +56,7 @@ export async function POST(req: NextRequest) {
       clientId: session.id,
     })
     if ('error' in result) return NextResponse.json({ error: result.error }, { status: 409 })
+    await logAudit({ action: 'CREATE', entityType: 'appointments', entityId: result.id, userId: session.id, newData: { vehicleId, employeeId, fecha, hora }, ip: getIp(req) })
     return NextResponse.json({ id: result.id }, { status: 201 })
   }
 
@@ -74,5 +76,6 @@ export async function POST(req: NextRequest) {
     guestMensaje: mensaje,
   })
   if ('error' in result) return NextResponse.json({ error: result.error }, { status: 409 })
+  await logAudit({ action: 'CREATE', entityType: 'appointments', entityId: result.id, newData: { vehicleId, employeeId, fecha, hora, guestEmail: email }, ip: getIp(req) })
   return NextResponse.json({ id: result.id }, { status: 201 })
 }

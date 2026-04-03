@@ -3,6 +3,7 @@ import { getSession } from '@/lib/auth/session'
 import { query, queryOne } from '@/lib/db/client'
 import { getAvailableSlotsForEmployee } from '@/lib/scheduling/availability'
 import { TZ } from '@/lib/scheduling/slots'
+import { logAudit, getIp } from '@/lib/db/audit'
 
 export async function PATCH(
   req: NextRequest,
@@ -41,6 +42,7 @@ export async function PATCH(
 
   try {
     await query('UPDATE appointments SET employee_id = $1 WHERE id = $2', [Number(newEmployeeId), Number(id)])
+    await logAudit({ action: 'REASSIGN', entityType: 'appointments', entityId: Number(id), userId: session.id, newData: { newEmployeeId }, ip: getIp(req) })
     return NextResponse.json({ ok: true })
   } catch {
     return NextResponse.json({ error: 'El empleado ya tiene una reserva en ese horario' }, { status: 409 })

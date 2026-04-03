@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import type { UserAdmin } from '@/lib/db/users.admin'
 
 const ROLES = [
@@ -123,6 +124,11 @@ export default function UsersManager({ users }: { users: UserAdmin[] }) {
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-3">
                     <button onClick={() => openEdit(u)} className="text-blue-600 hover:underline text-xs">Editar</button>
+                    {u.role_name === 'empleado' && u.activo && (
+                      <Link href={`/admin/usuarios/${u.id}/horario`} className="text-gray-500 hover:text-gray-800 text-xs">
+                        Horario
+                      </Link>
+                    )}
                     {u.activo && (
                       <button onClick={() => handleDeactivate(u.id)} disabled={deactivating === u.id}
                         className="text-red-500 hover:text-red-700 text-xs disabled:opacity-50">

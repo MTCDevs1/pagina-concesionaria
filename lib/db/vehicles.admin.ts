@@ -11,6 +11,9 @@ export type VehicleInput = {
   transmision: string
   color: string
   descripcion?: string
+  tipo?: string
+  estado_comercial?: 'disponible' | 'reservado' | 'vendido'
+  publicado?: boolean
   destacado?: boolean
   orden_destacado?: number | null
 }
@@ -18,14 +21,18 @@ export type VehicleInput = {
 export async function createVehicle(data: VehicleInput): Promise<number> {
   const result = await queryOne<{ id: number }>(
     `INSERT INTO vehicles
-       (marca, modelo, version, anio, precio, kilometraje, combustible, transmision, color, descripcion, destacado, orden_destacado)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+       (marca, modelo, version, anio, precio, kilometraje, combustible, transmision, color,
+        descripcion, tipo, estado_comercial, publicado, destacado, orden_destacado)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
      RETURNING id`,
     [
       data.marca, data.modelo, data.version ?? null,
       data.anio, data.precio, data.kilometraje,
       data.combustible, data.transmision, data.color,
       data.descripcion ?? null,
+      data.tipo ?? null,
+      data.estado_comercial ?? 'disponible',
+      data.publicado ?? true,
       data.destacado ?? false,
       data.orden_destacado ?? null,
     ]
@@ -40,11 +47,10 @@ export async function updateVehicle(id: number, data: Partial<VehicleInput>) {
     .join(', ')
   const values = Object.values(data).filter(v => v !== undefined)
   if (!fields) return
-  await query(`UPDATE vehicles SET ${fields} WHERE id = $1`, [id, ...values])
+  await query(`UPDATE vehicles SET ${fields}, updated_at = NOW() WHERE id = $1`, [id, ...values])
 }
 
 export async function deleteVehicle(id: number): Promise<{ error?: string }> {
-  // Verificar reservas futuras activas
   const future = await queryOne<{ count: string }>(
     `SELECT COUNT(*)::text AS count FROM appointments
      WHERE vehicle_id = $1 AND fecha_hora > NOW() AND estado = 'confirmada'`,
@@ -59,7 +65,6 @@ export async function deleteVehicle(id: number): Promise<{ error?: string }> {
 
 export async function addVehicleImage(vehicleId: number, url: string, esPortada: boolean, orden: number) {
   if (esPortada) {
-    // Quitar portada anterior
     await query(`UPDATE vehicle_images SET es_portada = FALSE WHERE vehicle_id = $1`, [vehicleId])
   }
   await query(
@@ -84,11 +89,15 @@ export async function updateImageOrder(imageId: number, orden: number) {
 export async function getAllVehiclesAdmin() {
   return query<{
     id: number; marca: string; modelo: string; version: string | null
-    anio: number; precio: number; destacado: boolean; deleted_at: string | null
+    anio: number; precio: number; tipo: string | null
+    estado_comercial: string; publicado: boolean
+    destacado: boolean; deleted_at: string | null
     portada_url: string | null; total_reservas: string
   }>(
     `SELECT
-       v.id, v.marca, v.modelo, v.version, v.anio, v.precio, v.destacado, v.deleted_at,
+       v.id, v.marca, v.modelo, v.version, v.anio, v.precio,
+       v.tipo, v.estado_comercial, v.publicado,
+       v.destacado, v.deleted_at,
        img.url AS portada_url,
        COUNT(a.id)::text AS total_reservas
      FROM vehicles v

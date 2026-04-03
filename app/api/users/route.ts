@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth/session'
 import { createUser } from '@/lib/db/users.admin'
+import { logAudit, getIp } from '@/lib/db/audit'
 
 export async function POST(req: NextRequest) {
   const session = await getSession()
@@ -20,5 +21,6 @@ export async function POST(req: NextRequest) {
 
   const result = await createUser({ email, password, nombre, apellido, telefono, role_id: Number(role_id) })
   if ('error' in result) return NextResponse.json({ error: result.error }, { status: 409 })
+  await logAudit({ action: 'CREATE', entityType: 'users', entityId: result.id, userId: session.id, newData: { email, nombre, apellido, role_id }, ip: getIp(req) })
   return NextResponse.json({ id: result.id }, { status: 201 })
 }

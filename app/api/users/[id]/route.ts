@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth/session'
 import { updateUser, deleteUser } from '@/lib/db/users.admin'
+import { logAudit, getIp } from '@/lib/db/audit'
 
 export async function PATCH(
   req: NextRequest,
@@ -20,6 +21,7 @@ export async function PATCH(
 
   const result = await updateUser(Number(id), body)
   if (result.error) return NextResponse.json({ error: result.error }, { status: 400 })
+  await logAudit({ action: 'UPDATE', entityType: 'users', entityId: Number(id), userId: session.id, newData: body, ip: getIp(req) })
   return NextResponse.json({ ok: true })
 }
 
@@ -39,5 +41,6 @@ export async function DELETE(
 
   const result = await deleteUser(Number(id))
   if (result.error) return NextResponse.json({ error: result.error }, { status: 409 })
+  await logAudit({ action: 'DELETE', entityType: 'users', entityId: Number(id), userId: session.id, ip: getIp(_req) })
   return NextResponse.json({ ok: true })
 }

@@ -3,6 +3,7 @@ import { getSession } from '@/lib/auth/session'
 import { cancelAppointment } from '@/lib/db/appointments'
 import { updateAppointmentStatus } from '@/lib/db/appointments.employee'
 import { queryOne } from '@/lib/db/client'
+import { logAudit, getIp } from '@/lib/db/audit'
 
 // DELETE → cliente cancela su reserva
 export async function DELETE(
@@ -15,6 +16,7 @@ export async function DELETE(
   const { id } = await params
   const result = await cancelAppointment(Number(id), session.id)
   if (result.error) return NextResponse.json({ error: result.error }, { status: 400 })
+  await logAudit({ action: 'CANCEL', entityType: 'appointments', entityId: Number(id), userId: session.id, ip: getIp(_req) })
   return NextResponse.json({ ok: true })
 }
 
@@ -48,5 +50,6 @@ export async function PATCH(
   }
 
   await updateAppointmentStatus(Number(id), estado, notas)
+  await logAudit({ action: 'STATUS_UPDATE', entityType: 'appointments', entityId: Number(id), userId: session.id, newData: { estado, notas }, ip: getIp(req) })
   return NextResponse.json({ ok: true })
 }

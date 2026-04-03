@@ -11,12 +11,19 @@ type InitialData = {
   marca?: string; modelo?: string; version?: string; anio?: number
   precio?: number; kilometraje?: number; combustible?: string
   transmision?: string; color?: string; descripcion?: string
+  tipo?: string; estado_comercial?: string; publicado?: boolean
   destacado?: boolean; orden_destacado?: number | null
   images?: ImageData[]
 }
 
 const COMBUSTIBLES = ['Nafta', 'Diesel', 'Eléctrico', 'Híbrido', 'GNC']
 const TRANSMISIONES = ['Manual', 'Automática']
+const TIPOS = ['Sedán', 'Hatchback', 'SUV', 'Pickup', 'Camioneta', 'Coupé', 'Cabrio', 'Minivan', 'Furgón']
+const ESTADOS = [
+  { value: 'disponible', label: 'Disponible' },
+  { value: 'reservado',  label: 'Reservado'  },
+  { value: 'vendido',    label: 'Vendido'    },
+]
 
 const inputCls = 'w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition'
 const labelCls = 'block text-xs font-medium text-gray-600 mb-1'
@@ -26,24 +33,27 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
   const isEdit = !!initial.id
 
   const [form, setForm] = useState({
-    marca: initial.marca ?? '',
-    modelo: initial.modelo ?? '',
-    version: initial.version ?? '',
-    anio: initial.anio ?? new Date().getFullYear(),
-    precio: initial.precio ?? '',
-    kilometraje: initial.kilometraje ?? 0,
-    combustible: initial.combustible ?? 'Nafta',
-    transmision: initial.transmision ?? 'Manual',
-    color: initial.color ?? '',
-    descripcion: initial.descripcion ?? '',
-    destacado: initial.destacado ?? false,
+    marca:           initial.marca           ?? '',
+    modelo:          initial.modelo          ?? '',
+    version:         initial.version         ?? '',
+    anio:            initial.anio            ?? new Date().getFullYear(),
+    precio:          initial.precio          ?? '',
+    kilometraje:     initial.kilometraje     ?? 0,
+    combustible:     initial.combustible     ?? 'Nafta',
+    transmision:     initial.transmision     ?? 'Manual',
+    color:           initial.color           ?? '',
+    descripcion:     initial.descripcion     ?? '',
+    tipo:            initial.tipo            ?? '',
+    estado_comercial: initial.estado_comercial ?? 'disponible',
+    publicado:       initial.publicado       ?? true,
+    destacado:       initial.destacado       ?? false,
     orden_destacado: initial.orden_destacado ?? '',
   })
 
-  const [images, setImages] = useState<ImageData[]>(initial.images ?? [])
+  const [images, setImages]     = useState<ImageData[]>(initial.images ?? [])
   const [uploading, setUploading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError]       = useState<string | null>(null)
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }))
 
@@ -52,7 +62,6 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
     if (!file) return
     setUploading(true)
 
-    // Upload a Vercel Blob
     const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
       method: 'POST',
       body: file,
@@ -61,7 +70,6 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
     setUploading(false)
 
     if (isEdit) {
-      // Agregar imagen directamente en edición
       await fetch(`/api/vehicles/${initial.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -102,9 +110,10 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
 
     const payload = {
       ...form,
-      anio: Number(form.anio),
-      precio: Number(form.precio),
-      kilometraje: Number(form.kilometraje),
+      anio:           Number(form.anio),
+      precio:         Number(form.precio),
+      kilometraje:    Number(form.kilometraje),
+      tipo:           form.tipo || null,
       orden_destacado: form.orden_destacado !== '' ? Number(form.orden_destacado) : null,
     }
 
@@ -128,7 +137,6 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
       setSubmitting(false)
       if (!res.ok) { setError(data.error); return }
 
-      // Asociar imágenes al nuevo vehículo
       for (const [i, img] of images.entries()) {
         await fetch(`/api/vehicles/${data.id}`, {
           method: 'PATCH',
@@ -163,9 +171,18 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
           </div>
         </div>
 
-        <div>
-          <label className={labelCls}>Versión</label>
-          <input value={form.version} onChange={e => set('version', e.target.value)} className={inputCls} placeholder="XEI 2.0" />
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className={labelCls}>Versión</label>
+            <input value={form.version} onChange={e => set('version', e.target.value)} className={inputCls} placeholder="XEI 2.0" />
+          </div>
+          <div>
+            <label className={labelCls}>Tipo</label>
+            <select value={form.tipo} onChange={e => set('tipo', e.target.value)} className={inputCls}>
+              <option value="">Sin especificar</option>
+              {TIPOS.map(t => <option key={t}>{t}</option>)}
+            </select>
+          </div>
         </div>
 
         <div className="grid grid-cols-3 gap-4">
@@ -208,7 +225,34 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
         </div>
       </section>
 
-      {/* Configuración destacado */}
+      {/* Estado y publicación */}
+      <section className="space-y-4">
+        <h2 className="text-sm font-semibold text-gray-900">Estado y publicación</h2>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className={labelCls}>Estado comercial</label>
+            <select value={form.estado_comercial} onChange={e => set('estado_comercial', e.target.value)} className={inputCls}>
+              {ESTADOS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <input
+            id="publicado"
+            type="checkbox"
+            checked={form.publicado}
+            onChange={e => set('publicado', e.target.checked)}
+            className="rounded"
+          />
+          <label htmlFor="publicado" className="text-sm text-gray-700">
+            Publicado — visible en el catálogo y la web pública
+          </label>
+        </div>
+      </section>
+
+      {/* Destacado */}
       <section className="space-y-4">
         <h2 className="text-sm font-semibold text-gray-900">Destacado</h2>
         <div className="flex items-center gap-3">

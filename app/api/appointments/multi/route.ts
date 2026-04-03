@@ -4,6 +4,7 @@ import { createMultiAppointment } from '@/lib/db/appointments.multi'
 import { MAX_VEHICLES_PER_VISIT } from '@/lib/scheduling/constants'
 import { getAvailableSlotsForEmployee } from '@/lib/scheduling/availability'
 import { isBookingAllowed } from '@/lib/scheduling/slots'
+import { logAudit, getIp } from '@/lib/db/audit'
 
 export async function POST(req: NextRequest) {
   const session = await getSession()
@@ -43,5 +44,6 @@ export async function POST(req: NextRequest) {
   })
 
   if ('error' in result) return NextResponse.json({ error: result.error }, { status: 409 })
+  await logAudit({ action: 'CREATE', entityType: 'appointments', entityId: result.id, userId: session.id, newData: { vehicleIds, employeeId, fecha, hora }, ip: getIp(req) })
   return NextResponse.json({ id: result.id }, { status: 201 })
 }

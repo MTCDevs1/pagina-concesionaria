@@ -18,6 +18,7 @@ export default async function EditarVehiculoPage({ params }: { params: Promise<{
         ...vehicle,
         version: vehicle.version ?? undefined,
         descripcion: vehicle.descripcion ?? undefined,
+        tipo: vehicle.tipo ?? undefined,
         orden_destacado: vehicle.orden_destacado ?? null,
       }} />
     </div>

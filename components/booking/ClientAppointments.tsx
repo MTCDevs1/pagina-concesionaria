@@ -29,11 +29,12 @@ function formatDatetime(iso: string) {
 export default function ClientAppointments({ appointments }: { appointments: AppointmentWithDetails[] }) {
   const router = useRouter()
   const [cancelling, setCancelling] = useState<number | null>(null)
+  const [confirmId, setConfirmId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   async function handleCancel(id: number) {
-    if (!confirm('¿Cancelar esta reserva?')) return
     setCancelling(id)
+    setConfirmId(null)
     setError(null)
 
     const res = await fetch(`/api/appointments/${id}`, { method: 'DELETE' })
@@ -49,10 +50,11 @@ export default function ClientAppointments({ appointments }: { appointments: App
 
   if (appointments.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 text-gray-400">
-        <p className="text-lg font-medium">No tenés reservas</p>
-        <a href="/catalogo" className="mt-3 text-sm text-blue-600 hover:underline">
-          Explorar vehículos
+      <div className="flex flex-col items-center justify-center py-24 text-slate-400">
+        <div className="text-4xl mb-4">📅</div>
+        <p className="text-base font-semibold text-slate-600">No tenés reservas</p>
+        <a href="/catalogo" className="mt-2 text-sm text-blue-600 hover:text-blue-800 transition-colors">
+          Explorar vehículos →
         </a>
       </div>
     )
@@ -64,21 +66,24 @@ export default function ClientAppointments({ appointments }: { appointments: App
   return (
     <div className="space-y-8">
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
       {active.length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Próximas</h2>
+          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Próximas</h2>
           <div className="space-y-3">
             {active.map(a => (
               <AppointmentCard
                 key={a.id}
                 appointment={a}
                 cancelling={cancelling === a.id}
-                onCancel={() => handleCancel(a.id)}
+                confirmPending={confirmId === a.id}
+                onRequestCancel={() => setConfirmId(a.id)}
+                onConfirmCancel={() => handleCancel(a.id)}
+                onCancelRequest={() => setConfirmId(null)}
               />
             ))}
           </div>
@@ -87,7 +92,7 @@ export default function ClientAppointments({ appointments }: { appointments: App
 
       {past.length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Historial</h2>
+          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Historial</h2>
           <div className="space-y-3">
             {past.map(a => (
               <AppointmentCard key={a.id} appointment={a} />
@@ -102,50 +107,72 @@ export default function ClientAppointments({ appointments }: { appointments: App
 function AppointmentCard({
   appointment: a,
   cancelling,
-  onCancel,
+  confirmPending,
+  onRequestCancel,
+  onConfirmCancel,
+  onCancelRequest,
 }: {
   appointment: AppointmentWithDetails
   cancelling?: boolean
-  onCancel?: () => void
+  confirmPending?: boolean
+  onRequestCancel?: () => void
+  onConfirmCancel?: () => void
+  onCancelRequest?: () => void
 }) {
   const vehicleName = [a.vehicle_marca, a.vehicle_modelo, a.vehicle_version].filter(Boolean).join(' ')
-
-  // ¿Puede cancelar? (solo confirmada y > 30 min)
-  const canCancel = a.estado === 'confirmada' && onCancel &&
+  const canCancel = a.estado === 'confirmada' && onRequestCancel &&
     new Date(a.fecha_hora).getTime() - Date.now() > 30 * 60 * 1000
 
   return (
-    <article className="rounded-2xl border border-gray-200 bg-white p-4 flex gap-4">
-      {/* Imagen */}
-      <div className="relative w-20 h-20 shrink-0 rounded-xl overflow-hidden bg-gray-100">
-        {a.portada_url ? (
-          <Image src={a.portada_url} alt={vehicleName} fill className="object-cover" sizes="80px" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs">Sin imagen</div>
-        )}
-      </div>
-
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold text-gray-900 text-sm truncate">{vehicleName}</h3>
-          <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${ESTADO_STYLE[a.estado]}`}>
-            {ESTADO_LABEL[a.estado]}
-          </span>
+    <article className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4 space-y-3">
+      <div className="flex gap-4">
+        {/* Imagen */}
+        <div className="relative w-20 h-20 shrink-0 rounded-xl overflow-hidden bg-slate-100">
+          {a.portada_url ? (
+            <Image src={a.portada_url} alt={vehicleName} fill className="object-cover" sizes="80px" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-slate-300 text-xs">Sin imagen</div>
+          )}
         </div>
-        <p className="text-xs text-gray-500 mt-1">{formatDatetime(a.fecha_hora)}</p>
-        <p className="text-xs text-gray-400">Asesor: {a.employee_nombre} {a.employee_apellido}</p>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-semibold text-slate-900 text-sm truncate">{vehicleName}</h3>
+            <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${ESTADO_STYLE[a.estado]}`}>
+              {ESTADO_LABEL[a.estado]}
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-1">{formatDatetime(a.fecha_hora)}</p>
+          <p className="text-xs text-slate-400">Asesor: {a.employee_nombre} {a.employee_apellido}</p>
+
+          {canCancel && !confirmPending && (
+            <button
+              onClick={onRequestCancel}
+              disabled={cancelling}
+              className="mt-2 text-xs font-medium text-red-500 hover:text-red-700 disabled:opacity-50 transition-colors"
+            >
+              {cancelling ? 'Cancelando...' : 'Cancelar reserva'}
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Cancelar */}
-      {canCancel && (
-        <button
-          onClick={onCancel}
-          disabled={cancelling}
-          className="shrink-0 self-center text-xs text-red-500 hover:text-red-700 disabled:opacity-50 transition"
-        >
-          {cancelling ? '...' : 'Cancelar'}
-        </button>
+      {/* Inline confirm */}
+      {confirmPending && (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex items-center justify-between gap-4">
+          <p className="text-sm text-red-700 font-medium">¿Confirmar cancelación?</p>
+          <div className="flex gap-2 shrink-0">
+            <button onClick={onConfirmCancel} disabled={cancelling}
+              className="rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1.5 disabled:opacity-50 transition-colors">
+              {cancelling ? '...' : 'Sí, cancelar'}
+            </button>
+            <button onClick={onCancelRequest}
+              className="rounded-lg border border-slate-200 bg-white text-slate-600 text-xs font-medium px-3 py-1.5 hover:bg-slate-50 transition-colors">
+              No
+            </button>
+          </div>
+        </div>
       )}
     </article>
   )

@@ -2,8 +2,9 @@
 
 import { redirect } from 'next/navigation'
 import { queryOne } from '@/lib/db/client'
-import { createSession, deleteSession } from './session'
+import { createSession, deleteSession, getSession } from './session'
 import { hashPassword, verifyPassword, validatePasswordStrength } from './passwords'
+import { logAudit } from '@/lib/db/audit'
 
 type User = {
   id: number
@@ -42,6 +43,8 @@ export async function loginAction(prevState: string | null, formData: FormData) 
     apellido: user.apellido,
     role: user.role_name as 'cliente' | 'empleado' | 'admin',
   })
+
+  await logAudit({ action: 'LOGIN', entityType: 'users', entityId: user.id, userId: user.id })
 
   const redirects: Record<string, string> = {
     admin: '/admin',
@@ -96,11 +99,17 @@ export async function registroAction(prevState: string | null, formData: FormDat
     role: 'cliente',
   })
 
+  await logAudit({ action: 'REGISTER', entityType: 'users', entityId: user.id, userId: user.id, newData: { email, nombre, apellido } })
+
   redirect('/cliente/reservas')
 }
 
 // ─── LOGOUT ──────────────────────────────────────────────────
 export async function logoutAction() {
+  const session = await getSession()
+  if (session) {
+    await logAudit({ action: 'LOGOUT', entityType: 'users', entityId: session.id, userId: session.id })
+  }
   await deleteSession()
   redirect('/')
 }

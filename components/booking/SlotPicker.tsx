@@ -37,7 +37,6 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
   const [loadingEmployees, setLoadingEmployees] = useState(false)
   const [loadingSlots, setLoadingSlots] = useState(false)
 
-  // Cargar empleados cuando cambia la fecha
   useEffect(() => {
     setLoadingEmployees(true)
     setEmployees([])
@@ -51,7 +50,6 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
       .finally(() => setLoadingEmployees(false))
   }, [selectedDate])
 
-  // Cargar turnos cuando cambia el empleado
   useEffect(() => {
     if (!selectedEmployee) return
     setLoadingSlots(true)
@@ -64,7 +62,6 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
       .finally(() => setLoadingSlots(false))
   }, [selectedEmployee, selectedDate, vehicleId])
 
-  // Notificar selección completa
   useEffect(() => {
     if (!selectedDate || !selectedEmployee || !selectedSlot) return
     const emp = employees.find(e => e.id === selectedEmployee)
@@ -78,19 +75,21 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
   }, [selectedDate, selectedEmployee, selectedSlot, employees, onSelect])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* Fecha */}
       <div>
-        <p className="text-sm font-medium text-gray-700 mb-3">Seleccioná una fecha</p>
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+          1 · Elegí una fecha
+        </p>
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
           {dates.map(d => (
             <button
               key={d}
               onClick={() => setSelectedDate(d)}
-              className={`shrink-0 rounded-xl border px-3 py-2 text-xs font-medium transition ${
+              className={`shrink-0 rounded-xl border px-3.5 py-2.5 text-xs font-semibold transition-all duration-200 ${
                 selectedDate === d
-                  ? 'border-blue-600 bg-blue-600 text-white'
-                  : 'border-gray-200 text-gray-700 hover:border-gray-400'
+                  ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                  : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700'
               }`}
             >
               {formatDate(d)}
@@ -99,23 +98,31 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
         </div>
       </div>
 
-      {/* Empleado */}
+      {/* Asesor */}
       <div>
-        <p className="text-sm font-medium text-gray-700 mb-3">Seleccioná un asesor</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+          2 · Elegí un asesor
+        </p>
         {loadingEmployees ? (
-          <p className="text-sm text-gray-400">Cargando asesores...</p>
+          <div className="flex items-center gap-2 text-sm text-slate-400">
+            <svg className="animate-spin h-4 w-4 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Cargando asesores...
+          </div>
         ) : employees.length === 0 ? (
-          <p className="text-sm text-gray-400">No hay asesores disponibles para esta fecha</p>
+          <p className="text-sm text-slate-400 italic">No hay asesores disponibles para esta fecha</p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {employees.map(e => (
               <button
                 key={e.id}
                 onClick={() => setSelectedEmployee(e.id)}
-                className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${
+                className={`rounded-xl border px-4 py-2.5 text-sm font-semibold transition-all duration-200 ${
                   selectedEmployee === e.id
-                    ? 'border-blue-600 bg-blue-600 text-white'
-                    : 'border-gray-200 text-gray-700 hover:border-gray-400'
+                    ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                    : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700'
                 }`}
               >
                 {e.nombre} {e.apellido}
@@ -128,30 +135,38 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
       {/* Horarios */}
       {selectedEmployee && (
         <div>
-          <p className="text-sm font-medium text-gray-700 mb-3">Seleccioná un horario</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+            3 · Elegí un horario
+          </p>
           {loadingSlots ? (
-            <p className="text-sm text-gray-400">Cargando horarios...</p>
-          ) : slots.length === 0 ? (
-            <p className="text-sm text-gray-400">No hay horarios disponibles</p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {slots.map(slot => (
-                <button
-                  key={slot}
-                  onClick={() => setSelectedSlot(slot)}
-                  className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${
-                    selectedSlot === slot
-                      ? 'border-blue-600 bg-blue-600 text-white'
-                      : 'border-gray-200 text-gray-700 hover:border-gray-400'
-                  }`}
-                >
-                  {slot}
-                </button>
-              ))}
+            <div className="flex items-center gap-2 text-sm text-slate-400">
+              <svg className="animate-spin h-4 w-4 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              Cargando horarios...
             </div>
-          )}
-          {slots.length > 0 && (
-            <p className="mt-2 text-xs text-gray-400">Duración de la visita: 45 min</p>
+          ) : slots.length === 0 ? (
+            <p className="text-sm text-slate-400 italic">No hay horarios disponibles para este asesor</p>
+          ) : (
+            <>
+              <div className="grid grid-cols-3 gap-2.5">
+                {slots.map(slot => (
+                  <button
+                    key={slot}
+                    onClick={() => setSelectedSlot(slot)}
+                    className={`rounded-xl border py-3 text-sm font-bold transition-all duration-200 ${
+                      selectedSlot === slot
+                        ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/20 scale-[1.03]'
+                        : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 hover:scale-[1.02]'
+                    }`}
+                  >
+                    {slot}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-3 text-xs text-slate-400">Duración de la visita: 45 min · Sin compromiso</p>
+            </>
           )}
         </div>
       )}

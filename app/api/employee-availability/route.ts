@@ -2,24 +2,33 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth/session'
 import { query, queryOne } from '@/lib/db/client'
 import { getAffectedAppointments, cancelAppointmentsByDate } from '@/lib/db/appointments.employee'
+import { logAudit, getIp } from '@/lib/db/audit'
 
-// GET → horario semanal + excepciones del empleado autenticado
-export async function GET() {
+// GET → horario semanal + excepciones (propio empleado o admin con ?employeeId=X)
+export async function GET(req: NextRequest) {
   const session = await getSession()
   if (!session || !['empleado', 'admin'].includes(session.role)) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  }
+
+  const url = new URL(req.url)
+  const targetIdParam = url.searchParams.get('employeeId')
+  let targetId = session.id
+
+  if (targetIdParam && session.role === 'admin') {
+    targetId = Number(targetIdParam)
   }
 
   const [schedule, exceptions] = await Promise.all([
     query(
       `SELECT dia_semana, hora_inicio, hora_fin, pausa_inicio, pausa_fin
        FROM employee_availability WHERE employee_id = $1 ORDER BY dia_semana`,
-      [session.id]
+      [targetId]
     ),
     query(
       `SELECT id, fecha, motivo FROM employee_exceptions
        WHERE employee_id = $1 AND fecha >= CURRENT_DATE ORDER BY fecha`,
-      [session.id]
+      [targetId]
     ),
   ])
 
@@ -33,19 +42,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   }
 
-  const { schedule } = await req.json()
-  // schedule: [{ dia_semana, hora_inicio, hora_fin, pausa_inicio, pausa_fin }]
+  const { schedule, employeeId } = await req.json()
+  const targetId = (session.role === 'admin' && employeeId) ? Number(employeeId) : session.id
 
-  await query(`DELETE FROM employee_availability WHERE employee_id = $1`, [session.id])
+  await query(`DELETE FROM employee_availability WHERE employee_id = $1`, [targetId])
 
   for (const s of schedule) {
     await query(
       `INSERT INTO employee_availability (employee_id, dia_semana, hora_inicio, hora_fin, pausa_inicio, pausa_fin)
        VALUES ($1,$2,$3,$4,$5,$6)`,
-      [session.id, s.dia_semana, s.hora_inicio, s.hora_fin, s.pausa_inicio ?? null, s.pausa_fin ?? null]
+      [targetId, s.dia_semana, s.hora_inicio, s.hora_fin, s.pausa_inicio ?? null, s.pausa_fin ?? null]
     )
   }
 
+  await logAudit({ action: 'UPDATE', entityType: 'employee_availability', entityId: session.id, userId: session.id, newData: { schedule }, ip: getIp(req) })
   return NextResponse.json({ ok: true })
 }
 
@@ -80,6 +90,7 @@ export async function PUT(req: NextRequest) {
     [session.id, fecha, motivo ?? null]
   )
 
+  await logAudit({ action: 'UPDATE', entityType: 'employee_exceptions', entityId: session.id, userId: session.id, newData: { fecha, motivo, cancelledCount: affected.length }, ip: getIp(req) })
   return NextResponse.json({ ok: true, cancelled: affected.length })
 }
 
