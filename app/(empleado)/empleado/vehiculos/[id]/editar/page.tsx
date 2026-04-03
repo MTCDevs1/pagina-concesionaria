@@ -11,7 +11,7 @@ export default async function EditarVehiculoPage({ params }: { params: Promise<{
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">
+      <h1 className="text-2xl font-bold text-[#F1F5F9] mb-8">
         Editar — {vehicle.marca} {vehicle.modelo}
       </h1>
       <VehicleForm initial={{

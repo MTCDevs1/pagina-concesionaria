@@ -78,7 +78,7 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
     <div className="space-y-7">
       {/* Fecha */}
       <div>
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+        <p className="text-xs font-semibold text-[#64748B] uppercase tracking-wider mb-3">
           1 · Elegí una fecha
         </p>
         <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
@@ -89,7 +89,7 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
               className={`shrink-0 rounded-xl border px-3.5 py-2.5 text-xs font-semibold transition-all duration-200 ${
                 selectedDate === d
                   ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                  : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700'
+                  : 'border-[#334155] bg-[#0F172A] text-[#94A3B8] hover:border-blue-500/40 hover:bg-blue-600/10 hover:text-blue-300'
               }`}
             >
               {formatDate(d)}
@@ -100,11 +100,11 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
 
       {/* Asesor */}
       <div>
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+        <p className="text-xs font-semibold text-[#64748B] uppercase tracking-wider mb-3">
           2 · Elegí un asesor
         </p>
         {loadingEmployees ? (
-          <div className="flex items-center gap-2 text-sm text-slate-400">
+          <div className="flex items-center gap-2 text-sm text-[#475569]">
             <svg className="animate-spin h-4 w-4 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -112,7 +112,7 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
             Cargando asesores...
           </div>
         ) : employees.length === 0 ? (
-          <p className="text-sm text-slate-400 italic">No hay asesores disponibles para esta fecha</p>
+          <p className="text-sm text-[#475569] italic">No hay asesores disponibles para esta fecha</p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {employees.map(e => (
@@ -122,7 +122,7 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
                 className={`rounded-xl border px-4 py-2.5 text-sm font-semibold transition-all duration-200 ${
                   selectedEmployee === e.id
                     ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                    : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700'
+                    : 'border-[#334155] bg-[#0F172A] text-[#94A3B8] hover:border-blue-500/40 hover:bg-blue-600/10 hover:text-blue-300'
                 }`}
               >
                 {e.nombre} {e.apellido}
@@ -135,11 +135,11 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
       {/* Horarios */}
       {selectedEmployee && (
         <div>
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+          <p className="text-xs font-semibold text-[#64748B] uppercase tracking-wider mb-3">
             3 · Elegí un horario
           </p>
           {loadingSlots ? (
-            <div className="flex items-center gap-2 text-sm text-slate-400">
+            <div className="flex items-center gap-2 text-sm text-[#475569]">
               <svg className="animate-spin h-4 w-4 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -147,7 +147,7 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
               Cargando horarios...
             </div>
           ) : slots.length === 0 ? (
-            <p className="text-sm text-slate-400 italic">No hay horarios disponibles para este asesor</p>
+            <p className="text-sm text-[#475569] italic">No hay horarios disponibles para este asesor</p>
           ) : (
             <>
               <div className="grid grid-cols-3 gap-2.5">
@@ -158,14 +158,14 @@ export default function SlotPicker({ vehicleId, onSelect }: Props) {
                     className={`rounded-xl border py-3 text-sm font-bold transition-all duration-200 ${
                       selectedSlot === slot
                         ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/20 scale-[1.03]'
-                        : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 hover:scale-[1.02]'
+                        : 'border-[#334155] bg-[#0F172A] text-[#94A3B8] hover:border-blue-500/40 hover:bg-blue-600/10 hover:text-blue-300 hover:scale-[1.02]'
                     }`}
                   >
                     {slot}
                   </button>
                 ))}
               </div>
-              <p className="mt-3 text-xs text-slate-400">Duración de la visita: 45 min · Sin compromiso</p>
+              <p className="mt-3 text-xs text-[#475569]">Duración de la visita: 45 min · Sin compromiso</p>
             </>
           )}
         </div>

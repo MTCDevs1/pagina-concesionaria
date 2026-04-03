@@ -22,12 +22,12 @@ export default async function AuditoriaPage({
 
   return (
     <div className="p-8 space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Auditoría</h1>
-      <p className="text-sm text-gray-500">{total} registros totales</p>
+      <h1 className="text-2xl font-bold text-[#F1F5F9]">Auditoría</h1>
+      <p className="text-sm text-[#64748B]">{total} registros totales</p>
 
-      <div className="rounded-2xl border border-gray-200 overflow-hidden">
+      <div className="rounded-2xl border border-[#334155] overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+          <thead className="bg-[#020617] text-xs text-[#64748B] uppercase tracking-wider">
             <tr>
               <th className="px-4 py-3 text-left">Fecha</th>
               <th className="px-4 py-3 text-left">Usuario</th>
@@ -36,24 +36,24 @@ export default async function AuditoriaPage({
               <th className="px-4 py-3 text-left">IP</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-[#334155]">
             {logs.length === 0 ? (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">Sin registros</td></tr>
+              <tr><td colSpan={5} className="px-4 py-8 text-center text-[#475569]">Sin registros</td></tr>
             ) : logs.map(log => (
-              <tr key={log.id} className="bg-white hover:bg-gray-50">
-                <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">{log.created_at}</td>
-                <td className="px-4 py-3 text-gray-700">
+              <tr key={log.id} className="bg-[#1E293B] hover:bg-[#334155] transition-colors">
+                <td className="px-4 py-3 text-xs text-[#64748B] whitespace-nowrap">{log.created_at}</td>
+                <td className="px-4 py-3 text-[#94A3B8]">
                   {log.user_nombre ? `${log.user_nombre} ${log.user_apellido}` : '—'}
                 </td>
                 <td className="px-4 py-3">
-                  <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-mono text-gray-700">
+                  <span className="rounded bg-[#334155] px-2 py-0.5 text-xs font-mono text-[#94A3B8]">
                     {log.action}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-gray-500 text-xs">
+                <td className="px-4 py-3 text-[#64748B] text-xs">
                   {log.entity_type}{log.entity_id ? ` #${log.entity_id}` : ''}
                 </td>
-                <td className="px-4 py-3 text-xs text-gray-400">{log.ip ?? '—'}</td>
+                <td className="px-4 py-3 text-xs text-[#475569]">{log.ip ?? '—'}</td>
               </tr>
             ))}
           </tbody>
@@ -62,18 +62,18 @@ export default async function AuditoriaPage({
 
       {/* Paginación */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm text-gray-500">
+        <div className="flex items-center justify-between text-sm text-[#64748B]">
           <span>Página {currentPage} de {totalPages}</span>
           <div className="flex gap-2">
             {currentPage > 1 && (
               <a href={`?page=${currentPage - 1}`}
-                className="rounded-lg border border-gray-300 px-3 py-1.5 hover:bg-gray-50 transition">
+                className="rounded-lg border border-[#334155] bg-[#1E293B] px-3 py-1.5 hover:bg-[#334155] text-[#94A3B8] transition">
                 ← Anterior
               </a>
             )}
             {currentPage < totalPages && (
               <a href={`?page=${currentPage + 1}`}
-                className="rounded-lg border border-gray-300 px-3 py-1.5 hover:bg-gray-50 transition">
+                className="rounded-lg border border-[#334155] bg-[#1E293B] px-3 py-1.5 hover:bg-[#334155] text-[#94A3B8] transition">
                 Siguiente →
               </a>
             )}

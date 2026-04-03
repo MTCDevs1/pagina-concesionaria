@@ -26,10 +26,10 @@ export default async function ReservarPage({ searchParams }: { searchParams: Pro
   return (
     <>
       <Navbar />
-      <div className="bg-white border-b border-slate-200">
+      <div className="bg-[#0F172A] border-b border-[#1E293B]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
-          <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 mb-1">Paso a paso</p>
-          <h1 className="text-2xl font-bold text-slate-900">Reservar visita</h1>
+          <p className="text-xs font-semibold uppercase tracking-widest text-blue-400 mb-1">Paso a paso</p>
+          <h1 className="text-2xl font-bold text-[#F1F5F9]">Reservar visita</h1>
         </div>
       </div>
 
@@ -38,37 +38,37 @@ export default async function ReservarPage({ searchParams }: { searchParams: Pro
 
           {/* Info vehículo – sidebar */}
           <div className="md:col-span-2 space-y-4">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="relative aspect-[4/3] bg-slate-100">
+            <div className="bg-[#1E293B] rounded-2xl border border-[#334155] overflow-hidden">
+              <div className="relative aspect-[4/3] bg-[#0F172A]">
                 {vehicle.portada_url ? (
                   <Image src={vehicle.portada_url} alt={vehicleName} fill className="object-cover" sizes="400px" />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-slate-400 text-sm">Sin imagen</div>
+                  <div className="flex h-full items-center justify-center text-[#475569] text-sm">Sin imagen</div>
                 )}
               </div>
               <div className="p-5">
-                <h2 className="font-bold text-slate-900 text-base">{vehicleName}</h2>
-                <p className="text-xl font-bold text-blue-600 mt-1">{formatPrice(vehicle.precio)}</p>
+                <h2 className="font-bold text-[#F1F5F9] text-base">{vehicleName}</h2>
+                <p className="text-xl font-bold text-blue-400 mt-1">{formatPrice(vehicle.precio)}</p>
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {[String(vehicle.anio), vehicle.combustible, vehicle.transmision].map(t => (
-                    <span key={t} className="rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">{t}</span>
+                    <span key={t} className="rounded-lg bg-[#334155] px-2.5 py-1 text-xs font-medium text-[#94A3B8]">{t}</span>
                   ))}
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-50 rounded-2xl border border-blue-100 p-4 space-y-2 text-xs text-blue-700">
-              <p className="font-semibold text-blue-800">¿Cómo funciona?</p>
+            <div className="bg-blue-600/10 rounded-2xl border border-blue-500/20 p-4 space-y-2 text-xs text-blue-300">
+              <p className="font-semibold text-blue-200">¿Cómo funciona?</p>
               <p>1. Elegí fecha, asesor y horario</p>
               <p>2. Confirmá tus datos</p>
               <p>3. ¡Listo! Tu visita queda confirmada</p>
-              <p className="text-blue-500 pt-1">Podés cancelar hasta 30 min antes</p>
+              <p className="text-blue-400 pt-1">Podés cancelar hasta 30 min antes</p>
             </div>
           </div>
 
           {/* Formulario */}
           <div className="md:col-span-3">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-7">
+            <div className="bg-[#1E293B] rounded-2xl border border-[#334155] p-7">
               <BookingForm vehicleId={vehicle.id} vehicleName={vehicleName} session={session} />
             </div>
           </div>

@@ -38,7 +38,7 @@ export default function VehicleAdminTable({ vehicles }: { vehicles: Vehicle[] })
   return (
     <div className="space-y-8">
       {error && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
+        <div className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-400">{error}</div>
       )}
 
       <VehicleTable title="Activos" items={active} deleting={deleting} confirmId={confirmId} onRequestDelete={setConfirmId} onConfirmDelete={handleDelete} onCancelDelete={() => setConfirmId(null)} />
@@ -59,10 +59,10 @@ function VehicleTable({
   if (items.length === 0) return null
   return (
     <div>
-      <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">{title}</h2>
-      <div className="rounded-2xl border border-slate-200 overflow-hidden bg-white">
+      <h2 className="text-xs font-semibold text-[#64748B] uppercase tracking-wider mb-3">{title}</h2>
+      <div className="rounded-2xl border border-[#334155] overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-xs text-slate-500 uppercase tracking-wider border-b border-slate-200">
+          <thead className="bg-[#020617] text-xs text-[#64748B] uppercase tracking-wider border-b border-[#334155]">
             <tr>
               <th className="px-4 py-3 text-left">Vehículo</th>
               <th className="px-4 py-3 text-left">Precio</th>
@@ -71,34 +71,34 @@ function VehicleTable({
               <th className="px-4 py-3 text-right">Acciones</th>
             </tr>
           </thead>
-          <tbody className={`divide-y divide-slate-100 ${dimmed ? 'opacity-50' : ''}`}>
+          <tbody className={`divide-y divide-[#334155] ${dimmed ? 'opacity-50' : ''}`}>
             {items.map(v => {
               const name = [v.marca, v.modelo, v.version].filter(Boolean).join(' ')
               return (
                 <>
-                  <tr key={v.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={v.id} className="bg-[#1E293B] hover:bg-[#334155] transition-colors">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-slate-100 shrink-0">
+                        <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-[#0F172A] shrink-0">
                           {v.portada_url
                             ? <Image src={v.portada_url} alt={name} fill className="object-cover" sizes="40px" />
-                            : <div className="w-full h-full bg-slate-200" />
+                            : <div className="w-full h-full bg-[#334155]" />
                           }
                         </div>
                         <div>
-                          <p className="font-semibold text-slate-900">{name}</p>
-                          <p className="text-xs text-slate-400">{v.anio}</p>
+                          <p className="font-semibold text-[#F1F5F9]">{name}</p>
+                          <p className="text-xs text-[#475569]">{v.anio}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-slate-700 font-medium">{formatPrice(v.precio)}</td>
-                    <td className="px-4 py-3 text-center text-slate-500">{v.destacado ? '★' : '—'}</td>
-                    <td className="px-4 py-3 text-center text-slate-500">{v.total_reservas}</td>
+                    <td className="px-4 py-3 text-[#94A3B8] font-medium">{formatPrice(v.precio)}</td>
+                    <td className="px-4 py-3 text-center text-[#64748B]">{v.destacado ? '★' : '—'}</td>
+                    <td className="px-4 py-3 text-center text-[#64748B]">{v.total_reservas}</td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-3">
                         {!v.deleted_at && (
                           <Link href={`/empleado/vehiculos/${v.id}/editar`}
-                            className="text-blue-600 hover:text-blue-800 text-xs font-medium transition-colors">
+                            className="text-blue-400 hover:text-blue-300 text-xs font-medium transition-colors">
                             Editar
                           </Link>
                         )}
@@ -110,13 +110,13 @@ function VehicleTable({
                                 {deleting === v.id ? '...' : 'Sí, eliminar'}
                               </button>
                               <button onClick={onCancelDelete}
-                                className="text-xs text-slate-500 hover:text-slate-700 transition-colors">
+                                className="text-xs text-[#64748B] hover:text-[#94A3B8] transition-colors">
                                 Cancelar
                               </button>
                             </span>
                           ) : (
                             <button onClick={() => onRequestDelete(v.id)} disabled={deleting === v.id}
-                              className="text-red-500 hover:text-red-700 text-xs font-medium disabled:opacity-50 transition-colors">
+                              className="text-red-400 hover:text-red-300 text-xs font-medium disabled:opacity-50 transition-colors">
                               Eliminar
                             </button>
                           )

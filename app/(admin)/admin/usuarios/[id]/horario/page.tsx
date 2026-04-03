@@ -22,13 +22,13 @@ export default async function HorarioEmpleadoPage({ params }: { params: Promise<
   return (
     <div className="p-8 max-w-3xl">
       <div className="mb-6">
-        <Link href="/admin/usuarios" className="text-sm text-blue-600 hover:underline">
+        <Link href="/admin/usuarios" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
           ← Volver a Usuarios
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900 mt-2">
+        <h1 className="text-2xl font-bold text-[#F1F5F9] mt-2">
           Horario de {empleado.nombre} {empleado.apellido}
         </h1>
-        <p className="text-sm text-gray-500">{empleado.email}</p>
+        <p className="text-sm text-[#64748B]">{empleado.email}</p>
       </div>
       <AvailabilityManagerAdmin employeeId={empleado.id} />
     </div>

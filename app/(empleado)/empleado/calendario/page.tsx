@@ -18,7 +18,7 @@ export default async function CalendarioPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Calendario</h1>
+      <h1 className="text-2xl font-bold text-[#F1F5F9] mb-6">Calendario</h1>
       <EmployeeCalendar appointments={appointments} from={from} to={to} />
     </div>
   )

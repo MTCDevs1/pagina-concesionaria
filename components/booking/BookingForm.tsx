@@ -18,7 +18,7 @@ type Props = {
   session: SessionUser | null
 }
 
-const inputCls = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-white outline-none transition-all duration-200'
+const inputCls = 'w-full rounded-xl border border-[#334155] bg-[#0F172A] px-3.5 py-2.5 text-sm text-[#F1F5F9] placeholder:text-[#475569] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200'
 
 function formatDateLong(dateStr: string) {
   return new Date(dateStr + 'T12:00:00Z').toLocaleDateString('es-UY', {
@@ -79,26 +79,26 @@ export default function BookingForm({ vehicleId, vehicleName, session }: Props) 
   if (step === 'done') {
     return (
       <div className="text-center space-y-5 py-4">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-          <svg className="h-8 w-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-500/25">
+          <svg className="h-8 w-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
           </svg>
         </div>
         <div>
-          <h2 className="text-xl font-bold text-slate-900">¡Reserva confirmada!</h2>
-          <p className="mt-1 text-sm text-slate-500">Te esperamos para la visita</p>
+          <h2 className="text-xl font-bold text-[#F1F5F9]">¡Reserva confirmada!</h2>
+          <p className="mt-1 text-sm text-[#64748B]">Te esperamos para la visita</p>
         </div>
 
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-left space-y-2">
-          <div className="flex items-center gap-2 text-sm text-emerald-800">
+        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5 text-left space-y-2">
+          <div className="flex items-center gap-2 text-sm text-emerald-300">
             <span>📅</span>
             <span className="font-semibold capitalize">{selection && formatDateLong(selection.fecha)}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-emerald-800">
+          <div className="flex items-center gap-2 text-sm text-emerald-300">
             <span>🕐</span>
             <span className="font-semibold">{selection?.hora} hs</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-emerald-800">
+          <div className="flex items-center gap-2 text-sm text-emerald-300">
             <span>👤</span>
             <span className="font-semibold">{selection?.employeeName}</span>
           </div>
@@ -108,14 +108,14 @@ export default function BookingForm({ vehicleId, vehicleName, session }: Props) 
           {session && (
             <button
               onClick={() => router.push('/cliente/reservas')}
-              className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-700 transition-all duration-200"
+              className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-500 transition-all duration-200"
             >
               Ver mis reservas
             </button>
           )}
           <button
             onClick={() => router.push('/catalogo')}
-            className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200"
+            className="rounded-xl border border-[#334155] bg-[#1E293B] px-5 py-2.5 text-sm font-semibold text-[#94A3B8] hover:bg-[#334155] hover:text-[#F1F5F9] transition-all duration-200"
           >
             Ver más autos
           </button>
@@ -133,9 +133,9 @@ export default function BookingForm({ vehicleId, vehicleName, session }: Props) 
       {selection && (
         <form onSubmit={handleSubmit} className="space-y-5 animate-fade-in">
           {/* Card resumen */}
-          <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 space-y-2">
-            <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider">Tu selección</p>
-            <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-blue-900">
+          <div className="rounded-2xl border border-blue-500/20 bg-blue-600/10 p-4 space-y-2">
+            <p className="text-xs font-semibold text-blue-400 uppercase tracking-wider">Tu selección</p>
+            <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-blue-200">
               <span className="flex items-center gap-1.5">
                 <span>📅</span>
                 <span className="font-semibold capitalize">{formatDateLong(selection.fecha)}</span>
@@ -153,48 +153,48 @@ export default function BookingForm({ vehicleId, vehicleName, session }: Props) 
 
           {/* Datos del usuario */}
           {session ? (
-            <div className="rounded-2xl border border-slate-200 bg-white px-5 py-4 space-y-1">
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Tus datos</p>
-              <p className="text-sm font-semibold text-slate-900">
+            <div className="rounded-2xl border border-[#334155] bg-[#0F172A] px-5 py-4 space-y-1">
+              <p className="text-xs font-semibold text-[#64748B] uppercase tracking-wider mb-2">Tus datos</p>
+              <p className="text-sm font-semibold text-[#F1F5F9]">
                 {session.nombre} {session.apellido}
               </p>
-              <p className="text-sm text-slate-500">{session.email}</p>
+              <p className="text-sm text-[#64748B]">{session.email}</p>
             </div>
           ) : (
             <div className="space-y-4">
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tus datos de contacto</p>
+              <p className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">Tus datos de contacto</p>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                    Nombre <span className="text-red-500">*</span>
+                  <label className="block text-xs font-medium text-[#94A3B8] mb-1.5">
+                    Nombre <span className="text-red-400">*</span>
                   </label>
                   <input name="nombre" required className={inputCls} placeholder="Juan" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                    Apellido <span className="text-red-500">*</span>
+                  <label className="block text-xs font-medium text-[#94A3B8] mb-1.5">
+                    Apellido <span className="text-red-400">*</span>
                   </label>
                   <input name="apellido" required className={inputCls} placeholder="García" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                  Teléfono <span className="text-red-500">*</span>
+                <label className="block text-xs font-medium text-[#94A3B8] mb-1.5">
+                  Teléfono <span className="text-red-400">*</span>
                 </label>
                 <input name="telefono" required type="tel" className={inputCls} placeholder="099 000 000" />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                  Email <span className="text-red-500">*</span>
+                <label className="block text-xs font-medium text-[#94A3B8] mb-1.5">
+                  Email <span className="text-red-400">*</span>
                 </label>
                 <input name="email" required type="email" className={inputCls} placeholder="tu@email.com" />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1.5">
+                <label className="block text-xs font-medium text-[#94A3B8] mb-1.5">
                   Mensaje (opcional)
                 </label>
                 <textarea
@@ -208,7 +208,7 @@ export default function BookingForm({ vehicleId, vehicleName, session }: Props) 
           )}
 
           {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <div className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-400">
               {error}
             </div>
           )}

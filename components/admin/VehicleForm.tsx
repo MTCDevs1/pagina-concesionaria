@@ -25,8 +25,8 @@ const ESTADOS = [
   { value: 'vendido',    label: 'Vendido'    },
 ]
 
-const inputCls = 'w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition'
-const labelCls = 'block text-xs font-medium text-gray-600 mb-1'
+const inputCls = 'w-full rounded-lg border border-[#334155] bg-[#0F172A] px-3.5 py-2.5 text-sm text-[#F1F5F9] placeholder:text-[#475569] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition'
+const labelCls = 'block text-xs font-medium text-[#94A3B8] mb-1'
 
 export default function VehicleForm({ initial = {} }: { initial?: InitialData }) {
   const router = useRouter()
@@ -153,12 +153,12 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl">
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>
+        <div className="rounded-lg bg-red-500/10 border border-red-500/25 px-4 py-3 text-sm text-red-400">{error}</div>
       )}
 
       {/* Datos básicos */}
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Datos del vehículo</h2>
+        <h2 className="text-sm font-semibold text-[#F1F5F9]">Datos del vehículo</h2>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -227,7 +227,7 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
 
       {/* Estado y publicación */}
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Estado y publicación</h2>
+        <h2 className="text-sm font-semibold text-[#F1F5F9]">Estado y publicación</h2>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -246,7 +246,7 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
             onChange={e => set('publicado', e.target.checked)}
             className="rounded"
           />
-          <label htmlFor="publicado" className="text-sm text-gray-700">
+          <label htmlFor="publicado" className="text-sm text-[#94A3B8]">
             Publicado — visible en el catálogo y la web pública
           </label>
         </div>
@@ -254,10 +254,10 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
 
       {/* Destacado */}
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Destacado</h2>
+        <h2 className="text-sm font-semibold text-[#F1F5F9]">Destacado</h2>
         <div className="flex items-center gap-3">
           <input id="destacado" type="checkbox" checked={form.destacado} onChange={e => set('destacado', e.target.checked)} className="rounded" />
-          <label htmlFor="destacado" className="text-sm text-gray-700">Mostrar en destacados del home</label>
+          <label htmlFor="destacado" className="text-sm text-[#94A3B8]">Mostrar en destacados del home</label>
         </div>
         {form.destacado && (
           <div className="max-w-xs">
@@ -269,17 +269,17 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
 
       {/* Imágenes */}
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Imágenes</h2>
+        <h2 className="text-sm font-semibold text-[#F1F5F9]">Imágenes</h2>
 
         {images.length > 0 && (
           <div className="flex flex-wrap gap-3">
             {images.map(img => (
-              <div key={img.id} className={`relative w-24 h-24 rounded-xl overflow-hidden border-2 ${img.es_portada ? 'border-blue-500' : 'border-gray-200'}`}>
+              <div key={img.id} className={`relative w-24 h-24 rounded-xl overflow-hidden border-2 ${img.es_portada ? 'border-blue-500' : 'border-[#334155]'}`}>
                 <Image src={img.url} alt="" fill className="object-cover" sizes="96px" />
-                <div className="absolute inset-0 bg-black/0 hover:bg-black/30 transition flex items-center justify-center opacity-0 hover:opacity-100 gap-1">
+                <div className="absolute inset-0 bg-black/0 hover:bg-black/50 transition flex items-center justify-center opacity-0 hover:opacity-100 gap-1">
                   {!img.es_portada && (
                     <button type="button" onClick={() => handleSetPortada(img)}
-                      className="rounded bg-white/90 px-1.5 py-0.5 text-xs text-gray-700">
+                      className="rounded bg-[#1E293B]/90 px-1.5 py-0.5 text-xs text-[#F1F5F9]">
                       Portada
                     </button>
                   )}
@@ -296,19 +296,19 @@ export default function VehicleForm({ initial = {} }: { initial?: InitialData })
           </div>
         )}
 
-        <label className="flex items-center gap-2 cursor-pointer rounded-xl border-2 border-dashed border-gray-300 px-4 py-3 hover:border-blue-400 transition max-w-xs">
+        <label className="flex items-center gap-2 cursor-pointer rounded-xl border-2 border-dashed border-[#334155] px-4 py-3 hover:border-blue-500/40 transition max-w-xs">
           <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
-          <span className="text-sm text-gray-500">{uploading ? 'Subiendo...' : '+ Agregar imagen'}</span>
+          <span className="text-sm text-[#64748B]">{uploading ? 'Subiendo...' : '+ Agregar imagen'}</span>
         </label>
       </section>
 
       <div className="flex gap-3 pt-2">
         <button type="submit" disabled={submitting}
-          className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60 transition">
+          className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60 transition">
           {submitting ? 'Guardando...' : isEdit ? 'Guardar cambios' : 'Crear vehículo'}
         </button>
         <button type="button" onClick={() => router.back()}
-          className="rounded-xl border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+          className="rounded-xl border border-[#334155] bg-[#1E293B] px-6 py-2.5 text-sm font-medium text-[#94A3B8] hover:bg-[#334155] transition">
           Cancelar
         </button>
       </div>

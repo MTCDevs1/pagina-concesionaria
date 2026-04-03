@@ -16,10 +16,10 @@ type Appointment = {
 type Employee = { id: number; nombre: string; apellido: string }
 
 const ESTADO_STYLE: Record<string, string> = {
-  confirmada: 'bg-blue-100 text-blue-700',
-  realizada:  'bg-green-100 text-green-700',
-  cancelada:  'bg-gray-100 text-gray-500',
-  no_asistio: 'bg-red-100 text-red-600',
+  confirmada: 'bg-blue-500/15 text-blue-400 border border-blue-500/25',
+  realizada:  'bg-green-500/15 text-green-400 border border-green-500/25',
+  cancelada:  'bg-[#334155] text-[#64748B] border border-[#475569]/30',
+  no_asistio: 'bg-red-500/15 text-red-400 border border-red-500/25',
 }
 
 const ESTADO_OPTS = ['confirmada', 'realizada', 'cancelada', 'no_asistio']
@@ -82,19 +82,19 @@ export default function AdminReservations({
       {/* Filtros */}
       <div className="flex flex-wrap gap-3">
         <select value={filterEstado} onChange={e => setFilterEstado(e.target.value)}
-          className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 outline-none">
+          className="rounded-lg border border-[#334155] bg-[#0F172A] px-3 py-2 text-sm text-[#F1F5F9] focus:border-blue-500 outline-none">
           <option value="">Todos los estados</option>
           {ESTADO_OPTS.map(e => <option key={e} value={e}>{e}</option>)}
         </select>
-        <span className="self-center text-sm text-gray-500">
+        <span className="self-center text-sm text-[#64748B]">
           {filtered.length} reserva{filtered.length !== 1 ? 's' : ''}
         </span>
       </div>
 
       {/* Tabla */}
-      <div className="rounded-2xl border border-gray-200 overflow-hidden">
+      <div className="rounded-2xl border border-[#334155] overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+          <thead className="bg-[#020617] text-xs text-[#64748B] uppercase tracking-wider">
             <tr>
               <th className="px-4 py-3 text-left">Fecha/Hora</th>
               <th className="px-4 py-3 text-left">Vehículo</th>
@@ -103,22 +103,22 @@ export default function AdminReservations({
               <th className="px-4 py-3 text-left">Estado</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-[#334155]">
             {filtered.length === 0 ? (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">Sin reservas</td></tr>
+              <tr><td colSpan={5} className="px-4 py-8 text-center text-[#475569]">Sin reservas</td></tr>
             ) : filtered.map(a => {
               const dt = new Date(a.fecha_hora)
               const vehicle = [a.vehicle_marca, a.vehicle_modelo, a.vehicle_version].filter(Boolean).join(' ')
               return (
                 <tr key={a.id} onClick={() => { setSelected(a); setReassignTo(null); setError(null) }}
-                  className="bg-white hover:bg-gray-50 cursor-pointer transition">
-                  <td className="px-4 py-3 text-gray-900">
+                  className="bg-[#1E293B] hover:bg-[#334155] cursor-pointer transition-colors">
+                  <td className="px-4 py-3 text-[#F1F5F9]">
                     <p className="font-medium">{dt.toLocaleDateString('es-UY')}</p>
-                    <p className="text-xs text-gray-500">{dt.toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p className="text-xs text-[#64748B]">{dt.toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' })}</p>
                   </td>
-                  <td className="px-4 py-3 text-gray-700">{vehicle}</td>
-                  <td className="px-4 py-3 text-gray-700">{getClientName(a)}</td>
-                  <td className="px-4 py-3 text-gray-700">{a.employee_nombre} {a.employee_apellido}</td>
+                  <td className="px-4 py-3 text-[#94A3B8]">{vehicle}</td>
+                  <td className="px-4 py-3 text-[#94A3B8]">{getClientName(a)}</td>
+                  <td className="px-4 py-3 text-[#94A3B8]">{a.employee_nombre} {a.employee_apellido}</td>
                   <td className="px-4 py-3">
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${ESTADO_STYLE[a.estado]}`}>
                       {a.estado.replace('_', ' ')}
@@ -133,35 +133,35 @@ export default function AdminReservations({
 
       {/* Modal detalle / reasignación */}
       {selected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="bg-[#1E293B] border border-[#334155] rounded-2xl shadow-2xl shadow-black/50 w-full max-w-md p-6 space-y-5">
             <div className="flex justify-between items-start">
-              <h3 className="font-bold text-gray-900">Reserva #{selected.id}</h3>
-              <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-gray-600">✕</button>
+              <h3 className="font-bold text-[#F1F5F9]">Reserva #{selected.id}</h3>
+              <button onClick={() => setSelected(null)} className="text-[#64748B] hover:text-[#F1F5F9] transition-colors">✕</button>
             </div>
 
-            <div className="rounded-xl bg-gray-50 px-4 py-3 text-sm space-y-1">
-              <p className="font-medium">{[selected.vehicle_marca, selected.vehicle_modelo, selected.vehicle_version].filter(Boolean).join(' ')}</p>
-              <p className="text-gray-500">{new Date(selected.fecha_hora).toLocaleString('es-UY')}</p>
-              <p className="text-gray-500">Cliente: {getClientName(selected)}</p>
-              <p className="text-gray-500">
+            <div className="rounded-xl bg-[#0F172A] border border-[#334155] px-4 py-3 text-sm space-y-1">
+              <p className="font-medium text-[#F1F5F9]">{[selected.vehicle_marca, selected.vehicle_modelo, selected.vehicle_version].filter(Boolean).join(' ')}</p>
+              <p className="text-[#64748B]">{new Date(selected.fecha_hora).toLocaleString('es-UY')}</p>
+              <p className="text-[#64748B]">Cliente: {getClientName(selected)}</p>
+              <p className="text-[#64748B]">
                 Tel: {selected.client_telefono ?? selected.guest_telefono} ·{' '}
                 {selected.client_email ?? selected.guest_email}
               </p>
-              <p className="text-gray-500">Empleado: {selected.employee_nombre} {selected.employee_apellido}</p>
-              {selected.notas && <p className="text-gray-500 italic">"{selected.notas}"</p>}
+              <p className="text-[#64748B]">Empleado: {selected.employee_nombre} {selected.employee_apellido}</p>
+              {selected.notas && <p className="text-[#64748B] italic">"{selected.notas}"</p>}
             </div>
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-red-400">{error}</p>}
 
             {/* Cambiar estado */}
             {selected.estado === 'confirmada' && (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-gray-600">Cambiar estado</p>
+                <p className="text-xs font-medium text-[#64748B]">Cambiar estado</p>
                 <div className="flex gap-2 flex-wrap">
                   {['realizada', 'no_asistio', 'cancelada'].map(e => (
                     <button key={e} onClick={() => handleUpdateEstado(e)} disabled={updatingEstado}
-                      className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50 transition capitalize">
+                      className="rounded-lg border border-[#334155] bg-[#0F172A] px-3 py-1.5 text-xs font-medium text-[#94A3B8] hover:bg-[#334155] disabled:opacity-50 transition capitalize">
                       {e.replace('_', ' ')}
                     </button>
                   ))}
@@ -172,17 +172,17 @@ export default function AdminReservations({
             {/* Reasignar */}
             {selected.estado === 'confirmada' && (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-gray-600">Reasignar empleado</p>
+                <p className="text-xs font-medium text-[#64748B]">Reasignar empleado</p>
                 <div className="flex gap-2">
                   <select value={reassignTo ?? ''} onChange={e => setReassignTo(Number(e.target.value))}
-                    className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500">
+                    className="flex-1 rounded-lg border border-[#334155] bg-[#0F172A] px-3 py-2 text-sm text-[#F1F5F9] outline-none focus:border-blue-500">
                     <option value="">Seleccionar empleado</option>
                     {employees.filter(e => e.id !== selected.employee_id).map(e => (
                       <option key={e.id} value={e.id}>{e.nombre} {e.apellido}</option>
                     ))}
                   </select>
                   <button onClick={handleReassign} disabled={!reassignTo || reassigning}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition">
+                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50 transition">
                     {reassigning ? '...' : 'Reasignar'}
                   </button>
                 </div>

@@ -6,8 +6,8 @@ type Props = {
   user: { nombre: string; apellido: string; email: string; telefono: string | null }
 }
 
-const inputCls = 'w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition'
-const labelCls = 'block text-xs font-medium text-gray-600 mb-1'
+const inputCls = 'w-full rounded-lg border border-[#334155] bg-[#0F172A] px-3.5 py-2.5 text-sm text-[#F1F5F9] placeholder:text-[#475569] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition'
+const labelCls = 'block text-xs font-medium text-[#94A3B8] mb-1'
 
 export default function ProfileEditForm({ user }: Props) {
   const [form, setForm] = useState({
@@ -88,13 +88,13 @@ export default function ProfileEditForm({ user }: Props) {
       {/* Cambiar contraseña */}
       <div>
         <button type="button" onClick={() => setShowPw(v => !v)}
-          className="text-xs text-blue-600 hover:underline">
+          className="text-xs text-blue-400 hover:text-blue-300 transition-colors">
           {showPw ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña'}
         </button>
       </div>
 
       {showPw && (
-        <div className="space-y-4 rounded-xl border border-gray-200 p-4 bg-gray-50">
+        <div className="space-y-4 rounded-xl border border-[#334155] p-4 bg-[#0F172A]">
           <div>
             <label className={labelCls}>Contraseña actual</label>
             <input type="password" value={form.currentPassword} onChange={e => set('currentPassword', e.target.value)} required className={inputCls} />
@@ -113,16 +113,16 @@ export default function ProfileEditForm({ user }: Props) {
       )}
 
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>
+        <div className="rounded-lg bg-red-500/10 border border-red-500/25 px-4 py-3 text-sm text-red-400">{error}</div>
       )}
       {success && (
-        <div className="rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+        <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/25 px-4 py-3 text-sm text-emerald-400">
           Datos actualizados correctamente.
         </div>
       )}
 
       <button type="submit" disabled={saving}
-        className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60 transition">
+        className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60 transition">
         {saving ? 'Guardando...' : 'Guardar cambios'}
       </button>
     </form>

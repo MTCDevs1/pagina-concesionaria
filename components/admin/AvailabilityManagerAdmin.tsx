@@ -22,7 +22,7 @@ const DEFAULT_SCHEDULE: ScheduleDay[] = DIAS.map((_, i) => ({
   active: i >= 1 && i <= 5,
 }))
 
-const inputCls = 'rounded-lg border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 outline-none transition'
+const inputCls = 'rounded-lg border border-[#334155] bg-[#0F172A] px-2.5 py-1.5 text-sm text-[#F1F5F9] focus:border-blue-500 outline-none transition'
 
 export default function AvailabilityManagerAdmin({ employeeId }: { employeeId: number }) {
   const [schedule, setSchedule] = useState<ScheduleDay[]>(DEFAULT_SCHEDULE)
@@ -62,13 +62,13 @@ export default function AvailabilityManagerAdmin({ employeeId }: { employeeId: n
     setSuccess(true)
   }
 
-  if (loading) return <div className="text-sm text-gray-500 py-8">Cargando horario...</div>
+  if (loading) return <div className="text-sm text-[#475569] py-8">Cargando horario...</div>
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-gray-200 divide-y divide-gray-100 bg-white overflow-hidden">
+      <div className="rounded-2xl border border-[#334155] divide-y divide-[#334155] overflow-hidden">
         {schedule.map(day => (
-          <div key={day.dia_semana} className={`px-5 py-4 transition ${day.active ? '' : 'opacity-50'}`}>
+          <div key={day.dia_semana} className={`px-5 py-4 bg-[#1E293B] transition ${day.active ? '' : 'opacity-50'}`}>
             <div className="flex items-center gap-4 flex-wrap">
               <div className="flex items-center gap-2 w-28">
                 <input
@@ -77,17 +77,17 @@ export default function AvailabilityManagerAdmin({ employeeId }: { employeeId: n
                   onChange={e => updateDay(day.dia_semana, 'active', e.target.checked)}
                   className="rounded"
                 />
-                <span className="text-sm font-medium text-gray-800">{DIAS[day.dia_semana]}</span>
+                <span className="text-sm font-medium text-[#F1F5F9]">{DIAS[day.dia_semana]}</span>
               </div>
 
               {day.active && (
                 <>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 text-sm text-[#94A3B8]">
                     <input type="time" value={day.hora_inicio} onChange={e => updateDay(day.dia_semana, 'hora_inicio', e.target.value)} className={inputCls} />
                     <span>–</span>
                     <input type="time" value={day.hora_fin} onChange={e => updateDay(day.dia_semana, 'hora_fin', e.target.value)} className={inputCls} />
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <div className="flex items-center gap-2 text-sm text-[#64748B]">
                     <span className="text-xs">Pausa:</span>
                     <input type="time" value={day.pausa_inicio ?? ''} onChange={e => updateDay(day.dia_semana, 'pausa_inicio', e.target.value)} className={inputCls} />
                     <span>–</span>
@@ -101,13 +101,13 @@ export default function AvailabilityManagerAdmin({ employeeId }: { employeeId: n
       </div>
 
       {success && (
-        <div className="rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+        <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/25 px-4 py-3 text-sm text-emerald-400">
           Horario guardado correctamente.
         </div>
       )}
 
       <button onClick={handleSave} disabled={saving}
-        className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60 transition">
+        className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60 transition">
         {saving ? 'Guardando...' : 'Guardar horario'}
       </button>
     </div>

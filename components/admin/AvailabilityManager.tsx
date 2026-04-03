@@ -131,7 +131,9 @@ export default function AvailabilityManager() {
     setExceptions(prev => prev.filter(e => e.id !== id))
   }
 
-  if (loading) return <p className="text-sm text-gray-400">Cargando...</p>
+  if (loading) return <p className="text-sm text-[#475569]">Cargando...</p>
+
+  const timeInputCls = 'w-full rounded-lg border border-[#334155] bg-[#0F172A] px-2 py-1.5 text-sm text-[#F1F5F9] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
 
   return (
     <div className="space-y-10 max-w-2xl">
@@ -139,41 +141,37 @@ export default function AvailabilityManager() {
       {/* Horario semanal */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-gray-900">Horario semanal</h2>
+          <h2 className="text-sm font-semibold text-[#F1F5F9]">Horario semanal</h2>
           <button onClick={saveSchedule} disabled={saving}
-            className="rounded-lg bg-blue-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-60 transition">
+            className="rounded-lg bg-blue-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-blue-500 disabled:opacity-60 transition">
             {saving ? 'Guardando...' : 'Guardar'}
           </button>
         </div>
 
         <div className="space-y-3">
           {schedule.map((day, i) => (
-            <div key={day.dia_semana} className={`rounded-xl border p-4 transition ${day.active ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50'}`}>
+            <div key={day.dia_semana} className={`rounded-xl border p-4 transition ${day.active ? 'border-[#334155] bg-[#1E293B]' : 'border-[#1E293B] bg-[#0F172A] opacity-60'}`}>
               <div className="flex items-center gap-3 mb-3">
                 <input type="checkbox" checked={day.active} onChange={e => updateDay(i, 'active', e.target.checked)} className="rounded" />
-                <span className={`text-sm font-medium ${day.active ? 'text-gray-900' : 'text-gray-400'}`}>{DIAS[day.dia_semana]}</span>
+                <span className={`text-sm font-medium ${day.active ? 'text-[#F1F5F9]' : 'text-[#475569]'}`}>{DIAS[day.dia_semana]}</span>
               </div>
               {day.active && (
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div className="space-y-1">
-                    <label className="text-xs text-gray-500">Entrada</label>
-                    <input type="time" value={day.hora_inicio} onChange={e => updateDay(i, 'hora_inicio', e.target.value)}
-                      className="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm outline-none focus:border-blue-500" />
+                    <label className="text-xs text-[#64748B]">Entrada</label>
+                    <input type="time" value={day.hora_inicio} onChange={e => updateDay(i, 'hora_inicio', e.target.value)} className={timeInputCls} />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-gray-500">Salida</label>
-                    <input type="time" value={day.hora_fin} onChange={e => updateDay(i, 'hora_fin', e.target.value)}
-                      className="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm outline-none focus:border-blue-500" />
+                    <label className="text-xs text-[#64748B]">Salida</label>
+                    <input type="time" value={day.hora_fin} onChange={e => updateDay(i, 'hora_fin', e.target.value)} className={timeInputCls} />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-gray-500">Pausa inicio</label>
-                    <input type="time" value={day.pausa_inicio ?? ''} onChange={e => updateDay(i, 'pausa_inicio', e.target.value)}
-                      className="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm outline-none focus:border-blue-500" />
+                    <label className="text-xs text-[#64748B]">Pausa inicio</label>
+                    <input type="time" value={day.pausa_inicio ?? ''} onChange={e => updateDay(i, 'pausa_inicio', e.target.value)} className={timeInputCls} />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-gray-500">Pausa fin</label>
-                    <input type="time" value={day.pausa_fin ?? ''} onChange={e => updateDay(i, 'pausa_fin', e.target.value)}
-                      className="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm outline-none focus:border-blue-500" />
+                    <label className="text-xs text-[#64748B]">Pausa fin</label>
+                    <input type="time" value={day.pausa_fin ?? ''} onChange={e => updateDay(i, 'pausa_fin', e.target.value)} className={timeInputCls} />
                   </div>
                 </div>
               )}
@@ -184,18 +182,18 @@ export default function AvailabilityManager() {
 
       {/* Días no disponibles */}
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Días no disponibles</h2>
+        <h2 className="text-sm font-semibold text-[#F1F5F9]">Días no disponibles</h2>
 
         {exceptions.length > 0 && (
           <div className="space-y-2">
             {exceptions.map(ex => (
-              <div key={ex.id} className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3">
+              <div key={ex.id} className="flex items-center justify-between rounded-xl border border-[#334155] bg-[#1E293B] px-4 py-3">
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{ex.fecha}</p>
-                  {ex.motivo && <p className="text-xs text-gray-500">{ex.motivo}</p>}
+                  <p className="text-sm font-medium text-[#F1F5F9]">{ex.fecha}</p>
+                  {ex.motivo && <p className="text-xs text-[#64748B]">{ex.motivo}</p>}
                 </div>
                 <button onClick={() => handleDeleteException(ex.id)}
-                  className="text-xs text-red-500 hover:text-red-700">
+                  className="text-xs text-red-400 hover:text-red-300 transition-colors">
                   Eliminar
                 </button>
               </div>
@@ -205,18 +203,18 @@ export default function AvailabilityManager() {
 
         <div className="flex gap-3 items-end">
           <div className="space-y-1">
-            <label className="text-xs text-gray-500">Fecha</label>
+            <label className="text-xs text-[#64748B]">Fecha</label>
             <input type="date" value={newException.fecha} onChange={e => setNewException(p => ({ ...p, fecha: e.target.value }))}
-              className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500" />
+              className="rounded-lg border border-[#334155] bg-[#0F172A] px-3 py-2 text-sm text-[#F1F5F9] outline-none focus:border-blue-500" />
           </div>
           <div className="flex-1 space-y-1">
-            <label className="text-xs text-gray-500">Motivo (opcional)</label>
+            <label className="text-xs text-[#64748B]">Motivo (opcional)</label>
             <input value={newException.motivo} onChange={e => setNewException(p => ({ ...p, motivo: e.target.value }))}
               placeholder="Vacaciones, enfermedad..."
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500" />
+              className="w-full rounded-lg border border-[#334155] bg-[#0F172A] px-3 py-2 text-sm text-[#F1F5F9] placeholder:text-[#475569] outline-none focus:border-blue-500" />
           </div>
           <button onClick={handleAddException} disabled={!newException.fecha || addingException}
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50 transition">
+            className="rounded-lg bg-[#334155] px-4 py-2 text-sm font-medium text-[#F1F5F9] hover:bg-[#475569] disabled:opacity-50 transition">
             {addingException ? '...' : 'Agregar'}
           </button>
         </div>
@@ -224,10 +222,10 @@ export default function AvailabilityManager() {
 
       {/* Popup: reservas afectadas */}
       {affected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 space-y-5">
-            <h3 className="font-bold text-gray-900">Reservas que serán canceladas</h3>
-            <p className="text-sm text-gray-500">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="bg-[#1E293B] border border-[#334155] rounded-2xl shadow-2xl shadow-black/50 w-full max-w-lg p-6 space-y-5">
+            <h3 className="font-bold text-[#F1F5F9]">Reservas que serán canceladas</h3>
+            <p className="text-sm text-[#64748B]">
               Al marcar este día como no disponible, las siguientes reservas quedarán canceladas automáticamente.
               Podés contactar a los clientes manualmente.
             </p>
@@ -238,10 +236,10 @@ export default function AvailabilityManager() {
                 const email = a.client_email ?? a.guest_email
                 const vehicleName = [a.vehicle_marca, a.vehicle_modelo, a.vehicle_version].filter(Boolean).join(' ')
                 return (
-                  <div key={a.id} className="rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm">
-                    <p className="font-medium text-gray-900">{clientName}</p>
-                    <p className="text-gray-500">{email}</p>
-                    <p className="text-gray-500">{vehicleName} — {a.fecha_hora.replace('T', ' ').slice(0, 16)}</p>
+                  <div key={a.id} className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm">
+                    <p className="font-medium text-[#F1F5F9]">{clientName}</p>
+                    <p className="text-[#64748B]">{email}</p>
+                    <p className="text-[#64748B]">{vehicleName} — {a.fecha_hora.replace('T', ' ').slice(0, 16)}</p>
                   </div>
                 )
               })}
@@ -249,11 +247,11 @@ export default function AvailabilityManager() {
 
             <div className="flex gap-3">
               <button onClick={confirmException} disabled={addingException}
-                className="flex-1 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60 transition">
+                className="flex-1 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-500 disabled:opacity-60 transition">
                 {addingException ? 'Cancelando...' : 'Confirmar y cancelar reservas'}
               </button>
               <button onClick={() => { setAffected(null); setPendingException(null) }}
-                className="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+                className="flex-1 rounded-lg border border-[#334155] bg-[#0F172A] px-4 py-2.5 text-sm font-medium text-[#94A3B8] hover:bg-[#334155] transition">
                 Volver
               </button>
             </div>
