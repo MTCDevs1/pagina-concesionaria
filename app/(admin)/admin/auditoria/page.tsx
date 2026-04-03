@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { getAuditLogs, countAuditLogs } from '@/lib/db/metrics'
+import RefreshButton from './RefreshButton'
 
 const PAGE_SIZE = 50
 
@@ -22,8 +23,13 @@ export default async function AuditoriaPage({
 
   return (
     <div className="p-8 space-y-6">
-      <h1 className="text-2xl font-bold text-[#F1F5F9]">Auditoría</h1>
-      <p className="text-sm text-[#64748B]">{total} registros totales</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-[#F1F5F9]">Auditoría</h1>
+          <p className="text-sm text-[#64748B] mt-1">{total} registros totales</p>
+        </div>
+        <RefreshButton />
+      </div>
 
       <div className="rounded-2xl border border-[#334155] overflow-hidden">
         <table className="w-full text-sm">
