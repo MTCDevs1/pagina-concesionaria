@@ -27,23 +27,23 @@ export default async function CatalogoPage({ searchParams }: { searchParams: Pro
   ])
 
   return (
-    <>
+    <div className="min-h-screen bg-[#0F172A]">
       <Navbar />
 
-      {/* Header de sección */}
-      <div className="bg-white border-b border-slate-200">
+      {/* Header */}
+      <div className="bg-[#111827] border-b border-[#1E293B]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-          <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 mb-1">Explorar</p>
-          <h1 className="text-2xl font-bold text-slate-900">Catálogo de vehículos</h1>
+          <p className="text-xs font-bold uppercase tracking-widest text-blue-500 mb-1">Explorar</p>
+          <h1 className="text-2xl font-bold text-white">Catálogo de vehículos</h1>
         </div>
       </div>
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 flex-1">
         <div className="flex gap-8 items-start">
 
-          {/* Sidebar filtros */}
+          {/* Sidebar */}
           <div className="hidden lg:block w-64 shrink-0">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sticky top-24">
+            <div className="bg-[#1E293B] rounded-2xl border border-[#334155] p-6 sticky top-24">
               <Suspense>
                 <VehicleFilters
                   marcas={options.marcas}
@@ -60,13 +60,13 @@ export default async function CatalogoPage({ searchParams }: { searchParams: Pro
           <div className="flex-1 min-w-0">
             {vehicles.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-32 text-center">
-                <div className="text-4xl mb-4">🔍</div>
-                <p className="text-lg font-semibold text-slate-700">Sin resultados</p>
-                <p className="text-sm text-slate-400 mt-1">Probá con otros filtros</p>
+                <div className="text-5xl mb-5">🔍</div>
+                <p className="text-lg font-semibold text-[#F1F5F9]">Sin resultados</p>
+                <p className="text-sm text-[#64748B] mt-1">Probá con otros filtros</p>
               </div>
             ) : (
               <>
-                <p className="text-sm text-slate-500 mb-6 font-medium">
+                <p className="text-sm text-[#64748B] mb-6 font-medium">
                   {vehicles.length} {vehicles.length === 1 ? 'vehículo encontrado' : 'vehículos encontrados'}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -81,6 +81,6 @@ export default async function CatalogoPage({ searchParams }: { searchParams: Pro
           </div>
         </div>
       </main>
-    </>
+    </div>
   )
 }

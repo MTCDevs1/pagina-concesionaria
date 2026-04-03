@@ -4,101 +4,81 @@ import { useActionState } from 'react'
 import { registroAction } from '@/lib/auth/actions'
 import Link from 'next/link'
 
-const inputCls = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-white outline-none transition-all duration-200'
-
 export default function RegistroPage() {
   const [error, action, pending] = useActionState(registroAction, null)
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#F3F5F9] px-4 py-12">
-      {/* Decorative background */}
+    <main className="min-h-screen flex items-center justify-center bg-[#0F172A] px-4 py-12">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-blue-100/60 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-slate-200/60 blur-3xl" />
+        <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-blue-600/8 blur-[120px]" />
+        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-blue-500/5 blur-[100px]" />
       </div>
 
       <div className="relative w-full max-w-md animate-slide-up">
-        {/* Logo */}
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-2.5 mb-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white font-bold text-lg shadow-lg shadow-blue-500/30">
               D
             </div>
-            <span className="text-xl font-bold text-slate-900">DriveOne</span>
+            <span className="text-xl font-bold text-white">DriveOne</span>
           </Link>
-          <p className="text-slate-500 text-sm">Creá tu cuenta y empezá a reservar</p>
+          <p className="text-[#64748B] text-sm">Creá tu cuenta y empezá a reservar</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+        <div className="bg-[#1E293B] rounded-2xl border border-[#334155] p-8 shadow-2xl shadow-black/40">
           <form action={action} className="space-y-5">
             {error && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-400">
                 {error}
               </div>
             )}
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="nombre" className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Nombre <span className="text-red-500">*</span>
-                </label>
-                <input id="nombre" name="nombre" type="text" required className={inputCls} placeholder="Juan" />
+                <label htmlFor="nombre" className="label-dark">Nombre</label>
+                <input id="nombre" name="nombre" type="text" required className="input-dark" placeholder="Juan" />
               </div>
               <div>
-                <label htmlFor="apellido" className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Apellido <span className="text-red-500">*</span>
-                </label>
-                <input id="apellido" name="apellido" type="text" required className={inputCls} placeholder="García" />
+                <label htmlFor="apellido" className="label-dark">Apellido</label>
+                <input id="apellido" name="apellido" type="text" required className="input-dark" placeholder="García" />
               </div>
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
-                Email <span className="text-red-500">*</span>
-              </label>
-              <input id="email" name="email" type="email" required autoComplete="email" className={inputCls} placeholder="tu@email.com" />
+              <label htmlFor="email" className="label-dark">Email</label>
+              <input id="email" name="email" type="email" required autoComplete="email" className="input-dark" placeholder="tu@email.com" />
             </div>
 
             <div>
-              <label htmlFor="telefono" className="block text-sm font-medium text-slate-700 mb-1.5">
-                Teléfono
-              </label>
-              <input id="telefono" name="telefono" type="tel" className={inputCls} placeholder="099 000 000" />
+              <label htmlFor="telefono" className="label-dark">Teléfono</label>
+              <input id="telefono" name="telefono" type="tel" className="input-dark" placeholder="099 000 000" />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
-                Contraseña <span className="text-red-500">*</span>
-              </label>
-              <input id="password" name="password" type="password" required autoComplete="new-password" className={inputCls} placeholder="Mínimo 8 caracteres" />
+              <label htmlFor="password" className="label-dark">Contraseña</label>
+              <input id="password" name="password" type="password" required autoComplete="new-password" className="input-dark" placeholder="Mínimo 8 caracteres" />
             </div>
 
             <div>
-              <label htmlFor="confirm" className="block text-sm font-medium text-slate-700 mb-1.5">
-                Confirmar contraseña <span className="text-red-500">*</span>
-              </label>
-              <input id="confirm" name="confirm" type="password" required autoComplete="new-password" className={inputCls} placeholder="••••••••" />
+              <label htmlFor="confirm" className="label-dark">Confirmar contraseña</label>
+              <input id="confirm" name="confirm" type="password" required autoComplete="new-password" className="input-dark" placeholder="••••••••" />
             </div>
 
-            <button
-              type="submit"
-              disabled={pending}
-              className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-700 hover:shadow-blue-500/30 hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0 disabled:cursor-not-allowed transition-all duration-200"
-            >
+            <button type="submit" disabled={pending} className="btn-primary w-full py-3 text-base">
               {pending ? 'Creando cuenta...' : 'Crear cuenta'}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-500">
+          <p className="mt-6 text-center text-sm text-[#64748B]">
             ¿Ya tenés cuenta?{' '}
-            <Link href="/login" className="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+            <Link href="/login" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors">
               Ingresá
             </Link>
           </p>
         </div>
 
-        <p className="mt-6 text-center text-xs text-slate-400">
-          <Link href="/catalogo" className="hover:text-slate-600 transition-colors">
+        <p className="mt-6 text-center text-xs text-[#475569]">
+          <Link href="/catalogo" className="hover:text-[#94A3B8] transition-colors">
             ← Volver al catálogo
           </Link>
         </p>
